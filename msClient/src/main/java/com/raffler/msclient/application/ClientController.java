@@ -3,6 +3,7 @@ package com.raffler.msclient.application;
 import com.raffler.msclient.application.representation.ClientSaveRequest;
 import com.raffler.msclient.domain.Client;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,12 +14,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("client")
 @RequiredArgsConstructor
+@Slf4j
 public class ClientController {
 
     private final ClientService service;
 
     @GetMapping
     public String status(){
+        log.info("Getting state from client microservice");
         return "ok";
     }
 
