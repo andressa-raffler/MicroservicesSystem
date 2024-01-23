@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: mscards
+
+
+server:
+  port: 0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka #Meu servidor Eureka roda na porta 8761
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} #toda vez que registrar um microservice no eureka, ele vai gerar um nome randomico, da mesma forma que a porta
+    #naming the instance of my microservice according to doccumentation 1.7.3 https://docs.spring.io/spring-cloud-netflix/docs/current/reference/html/
