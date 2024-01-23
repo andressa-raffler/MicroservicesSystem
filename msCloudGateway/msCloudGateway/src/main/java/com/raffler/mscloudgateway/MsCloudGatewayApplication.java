@@ -23,6 +23,7 @@ public class MsCloudGatewayApplication {
         return builder
                 .routes()
                 .route(r -> r.path("/client/**").uri("lb://msclient")) //toda vez que eu chamar o /client/ ele vai redirecionar para o loadbalancer
+                .route(r -> r.path("/cards/**").uri("lb://mscards"))
                 .build();
     }
 
