@@ -2,9 +2,8 @@ package com.raffler.mscreditrating.application;
 
 import com.raffler.mscreditrating.application.ex.BadComunicationWithMSException;
 import com.raffler.mscreditrating.application.ex.ClientDataNotFoundException;
-import com.raffler.mscreditrating.domain.model.ClientRatingReturn;
-import com.raffler.mscreditrating.domain.model.ClientStatus;
-import com.raffler.mscreditrating.domain.model.RatingData;
+import com.raffler.mscreditrating.application.ex.RequestCardException;
+import com.raffler.mscreditrating.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ public class CreditRatingController {
     }
 
     @PostMapping
-    public ResponseEntity rating (@RequestBody RatingData ratingData){
+    public ResponseEntity rateClient(@RequestBody RatingData ratingData){
         try {
             ClientRatingReturn clientRatingReturn = creditRatingService.doRate(ratingData.getCpf(),ratingData.getIncome());
             return ResponseEntity.ok(clientRatingReturn);
@@ -46,7 +45,16 @@ public class CreditRatingController {
         } catch (BadComunicationWithMSException e) {
             return ResponseEntity.status(HttpStatus.resolve(e.getStatus())).body(e.getMessage());
         }
-
     }
 
+    @PostMapping("cards-insuance")
+    public ResponseEntity requestCard(@RequestBody InsuanceRequestCardData requestCardData) {
+        try {
+            CardInsuanceProtocol insuanceProtocol = creditRatingService.requestCardInsuance(requestCardData);
+            return ResponseEntity.ok(insuanceProtocol);
+        } catch (RequestCardException e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+
+        }
+    }
 }

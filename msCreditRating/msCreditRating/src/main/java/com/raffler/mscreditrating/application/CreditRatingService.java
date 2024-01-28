@@ -2,9 +2,11 @@ package com.raffler.mscreditrating.application;
 
 import com.raffler.mscreditrating.application.ex.BadComunicationWithMSException;
 import com.raffler.mscreditrating.application.ex.ClientDataNotFoundException;
+import com.raffler.mscreditrating.application.ex.RequestCardException;
 import com.raffler.mscreditrating.domain.model.*;
 import com.raffler.mscreditrating.infra.client.CardResourceClient;
 import com.raffler.mscreditrating.infra.client.ClientResourceClient;
+import com.raffler.mscreditrating.infra.mqueu.RequestCardInsuancePublisher;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +25,7 @@ public class CreditRatingService {
 
     private final ClientResourceClient clientResourceClient;
     private final CardResourceClient cardResourceClient;
+    private final RequestCardInsuancePublisher cardInsuancePublisher;
     public ClientStatus getClientStatus(String cpf) throws ClientDataNotFoundException, BadComunicationWithMSException {
         try {
             ResponseEntity<List<ClientCards>> clientCardsResponseEntity = cardResourceClient.getCardsByClient(cpf);
@@ -78,6 +82,17 @@ public class CreditRatingService {
                 throw new ClientDataNotFoundException();
             }
             throw new BadComunicationWithMSException(e.getMessage(), e.status());
+        }
+    }
+
+    public CardInsuanceProtocol requestCardInsuance(InsuanceRequestCardData cardData){
+        try{
+            cardInsuancePublisher.requestCard(cardData);
+            String protocol = UUID.randomUUID().toString();
+            return new CardInsuanceProtocol(protocol);
+        }
+        catch(Exception e){
+            throw new RequestCardException(e.getMessage());
         }
     }
 

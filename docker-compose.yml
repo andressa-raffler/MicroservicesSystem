@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  msrabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: msrabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: unless-stopped
+    
