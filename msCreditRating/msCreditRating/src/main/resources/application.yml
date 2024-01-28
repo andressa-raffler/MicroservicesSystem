@@ -1,6 +1,12 @@
 spring:
   application:
     name: mscreditrating
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 
 
 server:
@@ -13,4 +19,9 @@ eureka:
       defaultZone: http://localhost:8761/eureka #Meu servidor Eureka roda na porta 8761
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}} #toda vez que registrar um microservice no eureka, ele vai gerar um nome randomico, da mesma forma que a porta
+
+
+mq:
+  queues:
+    cards-issuance: cards-issuance
 

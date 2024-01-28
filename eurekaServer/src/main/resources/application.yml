@@ -11,3 +11,4 @@ eureka:
     fetch-registry: false #quem vai fazer o fetch-registry vai ser o gateway
 
 
+
